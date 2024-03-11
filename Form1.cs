@@ -58,6 +58,7 @@ namespace GrayscaleImageConverter
 			Darkest,
 			Central,
 			Spread,
+			Contrast,
 			Custom
 		}
 
@@ -92,7 +93,9 @@ namespace GrayscaleImageConverter
 			OpenFileDialog dlg = new OpenFileDialog();
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				imageSource = new Bitmap(dlg.FileName);
+				using (Bitmap tmp = new Bitmap(dlg.FileName))
+					imageSource = new Bitmap(tmp);
+
 				imageWidth = imageSource.Width;
 				imageHeight = imageSource.Height;
 				if (imageWidth % 2 != 0)
@@ -162,6 +165,15 @@ namespace GrayscaleImageConverter
 								mapping.Add(colors[colorIndex++], i);
 							currentStep += stepSize;
 						}
+						break;
+					case MappingType.Contrast:
+						int halfNumColors = (colors.Count - 1) / 2;
+						colorIndex = 1;
+						for (int i = 0; i < halfNumColors; ++i)
+							mapping.Add(colors[colorIndex++], i + 1);
+
+						for (int i = 16 - (colors.Count - 1 - halfNumColors); i < 16; ++i)
+							mapping.Add(colors[colorIndex++], i);
 						break;
 					case MappingType.Central:
 						int diff = 16 - colors.Count;
