@@ -31,6 +31,8 @@ namespace GrayscaleImageConverter
 		int imageHeight = 0;
 		int imageX = 0;
 		int imageY = 0;
+		int imageXOnDrag = 0;
+		int imageYOnDrag = 0;
 
 		bool mouseDragging = false;
 		int mouseX = 0;
@@ -329,10 +331,8 @@ namespace GrayscaleImageConverter
 		{
 			if (mouseDragging)
 			{
-				imageX += (e.X - mouseX) / scale;
-				imageY += (e.Y - mouseY) / scale;
-				mouseX = e.X;
-				mouseY = e.Y;
+				imageX = imageXOnDrag + (e.X - mouseX) / scale;
+				imageY = imageYOnDrag + (e.Y - mouseY) / scale;
 				numericUpDownX.Value = imageX;
 				numericUpDownY.Value = imageY;
 
@@ -345,6 +345,8 @@ namespace GrayscaleImageConverter
 			mouseDragging = true;
 			mouseX = e.X;
 			mouseY = e.Y;
+			imageXOnDrag = imageX;
+			imageYOnDrag = imageY;
 		}
 
 		private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
