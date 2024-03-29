@@ -56,6 +56,7 @@ namespace GrayscaleImageConverter
 
 		enum MappingType
 		{
+			Match,
 			Brightest,
 			Darkest,
 			Central,
@@ -64,7 +65,7 @@ namespace GrayscaleImageConverter
 			Custom
 		}
 
-		MappingType mappingType = MappingType.Spread;
+		MappingType mappingType = MappingType.Match;
 
 		List<PatternMapping> mappingSwatches = new List<PatternMapping>();
 
@@ -110,6 +111,8 @@ namespace GrayscaleImageConverter
 				processedImage = null;
 				input.image = imageSource;
 				input.patternMapping = null;
+				if (mappingType == MappingType.Custom)
+					mappingType = MappingType.Match;
 
 				imageX = 0;
 				imageY = 0;
@@ -157,6 +160,24 @@ namespace GrayscaleImageConverter
 				};
 				switch (mappingType)
 				{
+					case MappingType.Match:
+						for (int i = 1; i < colors.Count; ++i)
+						{
+							float color = colors[i].R / 2.55f;
+							int closest = 0;
+							float closestError = 100;
+							for (int p = 0; p < PatternMapping.patternBrightness.Count; ++p)
+							{
+								float error = Math.Abs(color - PatternMapping.patternBrightness[p]);
+								if (error < closestError)
+								{
+									closest = p;
+									closestError = error;
+								}
+							}
+							mapping.Add(colors[i], closest);
+						}
+						break;
 					case MappingType.Spread:
 						float stepSize = (colors.Count - 1) / 15f;
 						float currentStep = 1;
@@ -224,6 +245,9 @@ namespace GrayscaleImageConverter
 
 		private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			if (e.Cancelled)
+				return;
+
 			processedImage = (ImageProcessing)e.Result;
 			pictureBox1.Invalidate();
 
@@ -320,8 +344,8 @@ namespace GrayscaleImageConverter
 					break;
 			}
 
-			Bitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, imageX, imageY, imageWidth, imageHeight, blackColor, whiteColor);
-			g.DrawImage(dithered, new Point(imageX, imageY));
+			using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, imageX, imageY, imageWidth, imageHeight, blackColor, whiteColor))
+				g.DrawImage(dithered.Bitmap, new Point(imageX, imageY));
 
 			e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 			e.Graphics.DrawImage(previewImage, new Rectangle(0, 0, 400 * scale, 240 * scale));
@@ -439,8 +463,8 @@ namespace GrayscaleImageConverter
 			dlg.Filter = "PNG images(*.png)|*.png|All files (*.*)|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				Bitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, 0, 0, imageWidth, imageHeight, Color.Black, Color.White);
-				dithered.Save(dlg.FileName);
+				using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, 0, 0, imageWidth, imageHeight, Color.Black, Color.White))
+					dithered.Bitmap.Save(dlg.FileName);
 			}
 		}
 	}

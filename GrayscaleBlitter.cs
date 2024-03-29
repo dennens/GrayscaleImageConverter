@@ -41,9 +41,9 @@ namespace GrayscaleImageConverter
 			new byte[]{ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff }
 		};
 
-		public static Bitmap BlitGrayscale(byte[] imageData, int drawX, int drawY, int width, int height, Color blackColor, Color whiteColor)
+		public static DirectBitmap BlitGrayscale(byte[] imageData, int drawX, int drawY, int width, int height, Color blackColor, Color whiteColor)
 		{
-			Bitmap result = new Bitmap(width, height);
+			DirectBitmap result = new DirectBitmap(width, height);
 			int halfWidth = width / 2;
 			// Offset for image row number
 			int imageYAddr;

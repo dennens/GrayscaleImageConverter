@@ -32,6 +32,7 @@
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.loadImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.exportAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.exportPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.zoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.x1ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.x2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,11 +42,16 @@
 			this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
+			this.label3 = new System.Windows.Forms.Label();
+			this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.playdatePalette = new System.Windows.Forms.CheckBox();
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.patternMappings = new System.Windows.Forms.Panel();
+			this.mappingTypeDropdown = new System.Windows.Forms.ComboBox();
+			this.label4 = new System.Windows.Forms.Label();
 			this.patternMapping15 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping14 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping13 = new GrayscaleImageConverter.PatternMapping();
@@ -62,19 +68,13 @@
 			this.patternMapping2 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping1 = new GrayscaleImageConverter.PatternMapping();
 			this.label2 = new System.Windows.Forms.Label();
-			this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
-			this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
-			this.label3 = new System.Windows.Forms.Label();
-			this.label4 = new System.Windows.Forms.Label();
-			this.mappingTypeDropdown = new System.Windows.Forms.ComboBox();
-			this.exportPNGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
 			this.panel2.SuspendLayout();
 			this.patternMappings.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -102,7 +102,7 @@
 			// 
 			this.loadImageToolStripMenuItem.Name = "loadImageToolStripMenuItem";
 			this.loadImageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
-			this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
+			this.loadImageToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
 			this.loadImageToolStripMenuItem.Text = "Load image...";
 			this.loadImageToolStripMenuItem.Click += new System.EventHandler(this.loadImageToolStripMenuItem_Click);
 			// 
@@ -113,6 +113,15 @@
 			this.exportAsToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
 			this.exportAsToolStripMenuItem.Text = "Export GSI...";
 			this.exportAsToolStripMenuItem.Click += new System.EventHandler(this.exportAsToolStripMenuItem_Click);
+			// 
+			// exportPNGToolStripMenuItem
+			// 
+			this.exportPNGToolStripMenuItem.Name = "exportPNGToolStripMenuItem";
+			this.exportPNGToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.S)));
+			this.exportPNGToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
+			this.exportPNGToolStripMenuItem.Text = "Export PNG...";
+			this.exportPNGToolStripMenuItem.Click += new System.EventHandler(this.exportPNGToolStripMenuItem_Click);
 			// 
 			// zoomToolStripMenuItem
 			// 
@@ -200,6 +209,53 @@
 			this.panel1.Size = new System.Drawing.Size(984, 29);
 			this.panel1.TabIndex = 4;
 			// 
+			// numericUpDownX
+			// 
+			this.numericUpDownX.Dock = System.Windows.Forms.DockStyle.Right;
+			this.numericUpDownX.Location = new System.Drawing.Point(519, 0);
+			this.numericUpDownX.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+			this.numericUpDownX.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownX.Name = "numericUpDownX";
+			this.numericUpDownX.Size = new System.Drawing.Size(56, 20);
+			this.numericUpDownX.TabIndex = 7;
+			this.numericUpDownX.ValueChanged += new System.EventHandler(this.numericUpDownX_ValueChanged);
+			// 
+			// label3
+			// 
+			this.label3.Dock = System.Windows.Forms.DockStyle.Right;
+			this.label3.Location = new System.Drawing.Point(575, 0);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(10, 29);
+			this.label3.TabIndex = 8;
+			this.label3.Text = ",";
+			// 
+			// numericUpDownY
+			// 
+			this.numericUpDownY.Dock = System.Windows.Forms.DockStyle.Right;
+			this.numericUpDownY.Location = new System.Drawing.Point(585, 0);
+			this.numericUpDownY.Maximum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+			this.numericUpDownY.Minimum = new decimal(new int[] {
+            500,
+            0,
+            0,
+            -2147483648});
+			this.numericUpDownY.Name = "numericUpDownY";
+			this.numericUpDownY.Size = new System.Drawing.Size(51, 20);
+			this.numericUpDownY.TabIndex = 6;
+			this.numericUpDownY.ValueChanged += new System.EventHandler(this.numericUpDownY_ValueChanged);
+			// 
 			// label1
 			// 
 			this.label1.Dock = System.Windows.Forms.DockStyle.Right;
@@ -270,6 +326,24 @@
 			this.patternMappings.Name = "patternMappings";
 			this.patternMappings.Size = new System.Drawing.Size(362, 615);
 			this.patternMappings.TabIndex = 1;
+			// 
+			// mappingTypeDropdown
+			// 
+			this.mappingTypeDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.mappingTypeDropdown.FormattingEnabled = true;
+			this.mappingTypeDropdown.Location = new System.Drawing.Point(136, 4);
+			this.mappingTypeDropdown.Name = "mappingTypeDropdown";
+			this.mappingTypeDropdown.Size = new System.Drawing.Size(121, 21);
+			this.mappingTypeDropdown.TabIndex = 16;
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(62, 7);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(51, 13);
+			this.label4.TabIndex = 15;
+			this.label4.Text = "Mapping:";
 			// 
 			// patternMapping15
 			// 
@@ -386,80 +460,6 @@
 			this.label2.Text = "Pattern mapping";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
-			// numericUpDownY
-			// 
-			this.numericUpDownY.Dock = System.Windows.Forms.DockStyle.Right;
-			this.numericUpDownY.Location = new System.Drawing.Point(585, 0);
-			this.numericUpDownY.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-			this.numericUpDownY.Minimum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownY.Name = "numericUpDownY";
-			this.numericUpDownY.Size = new System.Drawing.Size(51, 20);
-			this.numericUpDownY.TabIndex = 6;
-			this.numericUpDownY.ValueChanged += new System.EventHandler(this.numericUpDownY_ValueChanged);
-			// 
-			// numericUpDownX
-			// 
-			this.numericUpDownX.Dock = System.Windows.Forms.DockStyle.Right;
-			this.numericUpDownX.Location = new System.Drawing.Point(519, 0);
-			this.numericUpDownX.Maximum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            0});
-			this.numericUpDownX.Minimum = new decimal(new int[] {
-            500,
-            0,
-            0,
-            -2147483648});
-			this.numericUpDownX.Name = "numericUpDownX";
-			this.numericUpDownX.Size = new System.Drawing.Size(56, 20);
-			this.numericUpDownX.TabIndex = 7;
-			this.numericUpDownX.ValueChanged += new System.EventHandler(this.numericUpDownX_ValueChanged);
-			// 
-			// label3
-			// 
-			this.label3.Dock = System.Windows.Forms.DockStyle.Right;
-			this.label3.Location = new System.Drawing.Point(575, 0);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(10, 29);
-			this.label3.TabIndex = 8;
-			this.label3.Text = ",";
-			// 
-			// label4
-			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(62, 7);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(51, 13);
-			this.label4.TabIndex = 15;
-			this.label4.Text = "Mapping:";
-			// 
-			// mappingTypeDropdown
-			// 
-			this.mappingTypeDropdown.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.mappingTypeDropdown.FormattingEnabled = true;
-			this.mappingTypeDropdown.Location = new System.Drawing.Point(136, 4);
-			this.mappingTypeDropdown.Name = "mappingTypeDropdown";
-			this.mappingTypeDropdown.Size = new System.Drawing.Size(121, 21);
-			this.mappingTypeDropdown.TabIndex = 16;
-			// 
-			// exportPNGToolStripMenuItem
-			// 
-			this.exportPNGToolStripMenuItem.Name = "exportPNGToolStripMenuItem";
-			this.exportPNGToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
-            | System.Windows.Forms.Keys.S)));
-			this.exportPNGToolStripMenuItem.Size = new System.Drawing.Size(207, 22);
-			this.exportPNGToolStripMenuItem.Text = "Export PNG...";
-			this.exportPNGToolStripMenuItem.Click += new System.EventHandler(this.exportPNGToolStripMenuItem_Click);
-			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -477,11 +477,11 @@
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
 			this.panel2.ResumeLayout(false);
 			this.patternMappings.ResumeLayout(false);
 			this.patternMappings.PerformLayout();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

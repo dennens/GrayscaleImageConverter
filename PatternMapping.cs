@@ -18,7 +18,7 @@ namespace GrayscaleImageConverter
 		private bool canFireEvent = false;
 
 		static List<Bitmap> palette = new List<Bitmap>();
-		static List<int> patternBrightness = new List<int>();
+		public static List<int> patternBrightness = new List<int>();
 		static int[] NIBBLE_LOOKUP = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 		static int count_ones(byte b)
@@ -38,8 +38,8 @@ namespace GrayscaleImageConverter
 				{
 					data[d] = (byte)((mapping << 4) | mapping);
 				}
-				Bitmap pattern = GrayscaleBlitter.BlitGrayscale(data, 0, 0, width,height, Color.Black, Color.White);
-				palette.Add(pattern);
+				using (DirectBitmap pattern = GrayscaleBlitter.BlitGrayscale(data, 0, 0, width, height, Color.Black, Color.White))
+					palette.Add(new Bitmap(pattern.Bitmap));
 
 
 				byte[] patternBytes = GrayscaleBlitter.patterns[i];
