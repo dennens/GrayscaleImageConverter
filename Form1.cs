@@ -164,14 +164,14 @@ namespace GrayscaleImageConverter
 						for (int i = 1; i < colors.Count; ++i)
 						{
 							float color = colors[i].R / 2.55f;
-							int closest = 0;
+							int closest = 1;
 							float closestError = 100;
 							for (int p = 0; p < PatternMapping.patternBrightness.Count; ++p)
 							{
 								float error = Math.Abs(color - PatternMapping.patternBrightness[p]);
 								if (error < closestError)
 								{
-									closest = p;
+									closest = p + 1;
 									closestError = error;
 								}
 							}
