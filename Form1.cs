@@ -96,8 +96,45 @@ namespace GrayscaleImageConverter
 			OpenFileDialog dlg = new OpenFileDialog();
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				using (Bitmap tmp = new Bitmap(dlg.FileName))
-					imageSource = new Bitmap(tmp);
+				if (dlg.FileName.EndsWith("gsi"))
+				{
+					byte[] data = System.IO.File.ReadAllBytes(dlg.FileName);
+					int width0 = (int)data[0];
+					int width1 = (int)data[1];
+					int width = width0 + (width1 << 8);
+
+					int height0 = (int)data[2];
+					int height1 = (int)data[3];
+					int height = height0 + (height1 << 8);
+
+					int i = 4;
+
+					// Temp list of colors
+					List<Color> colors = new List<Color>();
+					colors.Add(Color.Transparent);
+					for (int c = 0; c < 15; ++c)
+						colors.Add(Color.FromArgb(c * 16, c * 16, c * 16));
+
+					using (DirectBitmap bmp = new DirectBitmap(width, height))
+					{
+						for (int y = 0; y < height; ++y)
+							for (int x = 0; x < width / 2; ++x)
+							{
+								byte v = data[i];
+								int vl = (v >> 4) & 0x0F;
+								int vr = v & 0x0F;
+								bmp.SetPixel(x * 2, y, colors[vl]);
+								bmp.SetPixel(x * 2 + 1, y, colors[vr]);
+								++i;
+							}
+						imageSource = new Bitmap(bmp.Bitmap);
+					}
+				}
+				else
+				{
+					using (Bitmap tmp = new Bitmap(dlg.FileName))
+						imageSource = new Bitmap(tmp);
+				}
 
 				imageWidth = imageSource.Width;
 				imageHeight = imageSource.Height;
