@@ -214,12 +214,12 @@
 			this.numericUpDownX.Dock = System.Windows.Forms.DockStyle.Right;
 			this.numericUpDownX.Location = new System.Drawing.Point(519, 0);
 			this.numericUpDownX.Maximum = new decimal(new int[] {
-            500,
+            9999,
             0,
             0,
             0});
 			this.numericUpDownX.Minimum = new decimal(new int[] {
-            500,
+            9999,
             0,
             0,
             -2147483648});
@@ -242,12 +242,12 @@
 			this.numericUpDownY.Dock = System.Windows.Forms.DockStyle.Right;
 			this.numericUpDownY.Location = new System.Drawing.Point(585, 0);
 			this.numericUpDownY.Maximum = new decimal(new int[] {
-            500,
+            9999,
             0,
             0,
             0});
 			this.numericUpDownY.Minimum = new decimal(new int[] {
-            500,
+            9999,
             0,
             0,
             -2147483648});
