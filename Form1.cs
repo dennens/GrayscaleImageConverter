@@ -109,12 +109,13 @@ namespace GrayscaleImageConverter
 
 					int i = 4;
 
-					// Temp list of colors
 					List<Color> colors = new List<Color>();
 					colors.Add(Color.Transparent);
 					for (int c = 0; c < 15; ++c)
-						colors.Add(Color.FromArgb(c * 16, c * 16, c * 16));
-
+					{
+						int v = (int)(PatternMapping.patternBrightness[c] * 2.55f);
+						colors.Add(Color.FromArgb(v, v, v));
+					}
 					using (DirectBitmap bmp = new DirectBitmap(width, height))
 					{
 						for (int y = 0; y < height; ++y)
@@ -123,8 +124,8 @@ namespace GrayscaleImageConverter
 								byte v = data[i];
 								int vl = (v >> 4) & 0x0F;
 								int vr = v & 0x0F;
-								bmp.SetPixel(x * 2, y, colors[vl]);
-								bmp.SetPixel(x * 2 + 1, y, colors[vr]);
+								bmp.SetPixel(x * 2, y, colors[vr]);
+								bmp.SetPixel(x * 2 + 1, y, colors[vl]);
 								++i;
 							}
 						imageSource = new Bitmap(bmp.Bitmap);
