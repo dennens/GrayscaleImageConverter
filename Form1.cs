@@ -19,6 +19,7 @@ namespace GrayscaleImageConverter
 			public List<Color> colors;
 			public Dictionary<Color, int> patternMapping = new Dictionary<Color, int>();
 			public byte[] imageData;
+			public byte[] usedPatternIndices;
 		}
 
 		class ImageProcessingSource
@@ -43,9 +44,14 @@ namespace GrayscaleImageConverter
 		public Color whiteColor = Color.White;
 
 		Bitmap imageSource;
+		DirectBitmap directImageSource;
 		ImageProcessing processedImage;
+		ImageProcessingSource queuedImageProcessing;
 
 		Bitmap previewImage = new Bitmap(400, 240);
+
+		byte[] usedPatternIndices = new byte[15];
+
 		enum BackgroundType
 		{
 			White,
@@ -68,6 +74,7 @@ namespace GrayscaleImageConverter
 		MappingType mappingType = MappingType.Match;
 
 		List<PatternMapping> mappingSwatches = new List<PatternMapping>();
+		Color highlightedColor = Color.Transparent;
 
 		public Form1()
 		{
@@ -89,6 +96,20 @@ namespace GrayscaleImageConverter
 				}
 			}
 			mappingSwatches.Sort((a, b) => a.Location.Y.CompareTo(b.Location.Y));
+		}
+
+		internal void onPatternClicked(Color color)
+		{
+			if (color == highlightedColor)
+				highlightedColor = Color.Transparent;
+			else
+				highlightedColor = color;
+
+			foreach (PatternMapping swatch in mappingSwatches)
+			{
+				swatch.onSelectedPatternChanged(highlightedColor);
+			}
+			pictureBox1.Invalidate();
 		}
 
 		private void loadImageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -139,6 +160,12 @@ namespace GrayscaleImageConverter
 
 				imageWidth = imageSource.Width;
 				imageHeight = imageSource.Height;
+				if (directImageSource != null)
+					directImageSource.Dispose();
+				directImageSource = new DirectBitmap(imageWidth, imageHeight);
+				for (int x = 0; x < imageWidth; ++x)
+					for (int y = 0; y < imageHeight; ++y)
+						directImageSource.SetPixel(x, y, imageSource.GetPixel(x, y));
 				if (imageWidth % 2 != 0)
 				{
 					MessageBox.Show("Image width not a multiple of 2 (" + imageWidth + "), aborting");
@@ -258,6 +285,14 @@ namespace GrayscaleImageConverter
 			byte[] data = new byte[source.Width * source.Height / 2];
 			int dataIndex = 0;
 
+			HashSet<byte> usedPatternIndices = new HashSet<byte>();
+			for (int i = 1; i < colors.Count; ++i)
+			{
+				usedPatternIndices.Add((byte)(mapping[colors[i]] - 1));
+			}
+			List<byte> patternInts = usedPatternIndices.ToList();
+			patternInts.Sort();
+
 			for (int y = 0; y < source.Height; ++y)
 			{
 				for (int x = 0; x < source.Width; x += 2)
@@ -265,8 +300,8 @@ namespace GrayscaleImageConverter
 					Color c1 = source.GetPixel(x, y);
 					Color c2 = source.GetPixel(x + 1, y);
 
-					int v1 = mapping[c1];
-					int v2 = mapping[c2];
+					int v1 = c1 == Color.Transparent ? 0 : patternInts.IndexOf((byte)(mapping[c1] - 1)) + 1;
+					int v2 = c2 == Color.Transparent ? 0 : patternInts.IndexOf((byte)(mapping[c2] - 1)) + 1;
 
 					byte res = (byte)((v2 << 4) + v1);
 					data[dataIndex++] = res;
@@ -278,16 +313,23 @@ namespace GrayscaleImageConverter
 			result.patternMapping = mapping;
 			result.imageData = data;
 			result.colors = colors;
+			result.usedPatternIndices = patternInts.ToArray();
 			e.Result = result;
 		}
 
 		private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			if (queuedImageProcessing != null)
+			{
+				backgroundWorker1.RunWorkerAsync(queuedImageProcessing);
+				queuedImageProcessing = null;
+			}
 			if (e.Cancelled)
 				return;
 
 			processedImage = (ImageProcessing)e.Result;
 			pictureBox1.Invalidate();
+			usedPatternIndices = processedImage.usedPatternIndices;
 
 			SuspendLayout();
 			int swatchIndex = 0;
@@ -312,7 +354,11 @@ namespace GrayscaleImageConverter
 			ImageProcessingSource input = new ImageProcessingSource();
 			input.image = imageSource;
 			input.patternMapping = processedImage?.patternMapping;
-			backgroundWorker1.RunWorkerAsync(input);
+
+			if (!backgroundWorker1.IsBusy)
+				backgroundWorker1.RunWorkerAsync(input);
+			else
+				queuedImageProcessing = input;
 		}
 
 		private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -329,6 +375,27 @@ namespace GrayscaleImageConverter
 			progressBar1.Value = e.ProgressPercentage;
 		}
 
+		byte[] GetBytesFromShort(ushort v)
+		{
+			byte b1 = (byte)(v & 0xFF);
+			byte b2 = (byte)((v >> 8) & 0xFF);
+			return new byte[]{ b1, b2 };
+		}
+
+		byte[] GetBytesFromInt(uint v)
+		{
+			byte b1 = (byte)(v & 0xFF);
+			byte b2 = (byte)((v >> 8) & 0xFF);
+			byte b3 = (byte)((v >> 16) & 0xFF);
+			byte b4 = (byte)((v >> 24) & 0xFF);
+			return new byte[] { b1, b2, b3, b4 };
+		}
+
+		uint Combine6BitValuesIntoInt(uint v1, uint v2, uint v3, uint v4, uint v5)
+		{
+			return v5 + (v4 << 6) + (v3 << 12) + (v2 << 18) + (v1 << 24);
+		}
+
 		private void exportAsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (processedImage == null) return;
@@ -340,18 +407,31 @@ namespace GrayscaleImageConverter
 			{
 				// Save file...
 				// Size header (shorts)
-				List<byte> sizeBytes = new List<byte>();
-				int heightB1 = imageHeight & 0xFF;
-				int heightB2 = (imageHeight >> 8) & 0xFF;
-				int widthB1 = imageWidth & 0xFF;
-				int widthB2 = (imageWidth >> 8) & 0xFF;
-				sizeBytes.Add((byte)widthB1);
-				sizeBytes.Add((byte)widthB2);
-				sizeBytes.Add((byte)heightB1);
-				sizeBytes.Add((byte)heightB2);
+				List<byte> headerBytes = new List<byte>();
+				headerBytes.AddRange(GetBytesFromShort((ushort)imageWidth));
+				headerBytes.AddRange(GetBytesFromShort((ushort)imageHeight));
+
+				// Add used indices
+				// 6 bits per index, 15 indices - 6 indices per 32 bits, 3 ints
+				for (int i = 0; i < 3; ++i)
+				{
+					List<byte> indices = new List<byte>();
+					for (int j = 0; j < 5; ++j)
+					{
+						if ((i * 5) + j < usedPatternIndices.Length)
+							indices.Add(usedPatternIndices[(i * 5) + j]);
+						else
+							indices.Add(0);
+					}
+					uint sizeInt = Combine6BitValuesIntoInt(indices[0], indices[1], indices[2], indices[3], indices[4]);
+					headerBytes.AddRange(GetBytesFromInt(sizeInt));
+				}
 
 				List<byte> bytes = processedImage.imageData.ToList();
-				bytes.InsertRange(0, sizeBytes);
+				bytes.InsertRange(0, headerBytes);
+
+				// Set identifier for new version that includes used pattern indices
+				bytes[1] |= 1 << 7;
 
 				System.IO.File.WriteAllBytes(dlg.FileName, bytes.ToArray());
 			}
@@ -382,7 +462,9 @@ namespace GrayscaleImageConverter
 					break;
 			}
 
-			using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, imageX, imageY, imageWidth, imageHeight, blackColor, whiteColor))
+			byte[] patternIndices = getUsedPatternIndices();
+
+			using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, patternIndices, imageX, imageY, imageWidth, imageHeight, blackColor, whiteColor, directImageSource, highlightedColor, Color.Salmon))
 				g.DrawImage(dithered.Bitmap, new Point(imageX, imageY));
 
 			e.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -492,6 +574,11 @@ namespace GrayscaleImageConverter
 			backgroundWorker1.RunWorkerAsync(input);
 		}
 
+		private byte[] getUsedPatternIndices()
+		{
+			return usedPatternIndices;
+		}
+
 		private void exportPNGToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (processedImage == null) return;
@@ -501,7 +588,8 @@ namespace GrayscaleImageConverter
 			dlg.Filter = "PNG images(*.png)|*.png|All files (*.*)|*.*";
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
-				using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, 0, 0, imageWidth, imageHeight, Color.Black, Color.White))
+				byte[] patternIndices = getUsedPatternIndices();
+				using (DirectBitmap dithered = GrayscaleBlitter.BlitGrayscale(processedImage.imageData, patternIndices, 0, 0, imageWidth, imageHeight, Color.Black, Color.White, null, Color.Transparent, Color.Red))
 					dithered.Bitmap.Save(dlg.FileName);
 			}
 		}

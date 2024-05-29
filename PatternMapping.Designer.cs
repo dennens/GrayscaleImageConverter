@@ -41,6 +41,7 @@
 			this.colorPanel.Name = "colorPanel";
 			this.colorPanel.Size = new System.Drawing.Size(65, 26);
 			this.colorPanel.TabIndex = 0;
+			this.colorPanel.Click += new System.EventHandler(this.colorPanel_Click);
 			// 
 			// label1
 			// 
@@ -58,6 +59,7 @@
 			this.pictureBox1.Size = new System.Drawing.Size(89, 26);
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
 			// 
 			// patternDropdown
 			// 

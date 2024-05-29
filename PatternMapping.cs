@@ -30,15 +30,16 @@ namespace GrayscaleImageConverter
 		{
 			int width = 90;
 			int height = 26;
-			for (int i = 0; i < 15; ++i)
+			byte[] data = new byte[width * height / 2];
+			for (int d = 0; d < data.Length; ++d)
 			{
-				int mapping = i + 1;
-				byte[] data = new byte[width * height / 2];
-				for (int d = 0; d < data.Length; ++d)
-				{
-					data[d] = (byte)((mapping << 4) | mapping);
-				}
-				using (DirectBitmap pattern = GrayscaleBlitter.BlitGrayscale(data, 0, 0, width, height, Color.Black, Color.White))
+				data[d] = (byte)((1 << 4) | 1);
+			}
+			byte[] patternIndices = { 1 };
+			for (int i = 0; i < GrayscaleBlitter.patterns.Length; ++i)
+			{
+				patternIndices[0] = (byte)i;
+				using (DirectBitmap pattern = GrayscaleBlitter.BlitGrayscale(data, patternIndices, 0, 0, width, height, Color.Black, Color.White, null, Color.Transparent, Color.Red))
 					palette.Add(new Bitmap(pattern.Bitmap));
 
 
@@ -55,7 +56,7 @@ namespace GrayscaleImageConverter
 			InitializeComponent();
 
 			canFireEvent = false;
-			for (int i = 1; i < 16; ++i)
+			for (int i = 1; i < patternBrightness.Count + 1; ++i)
 			{
 				patternDropdown.Items.Add(patternBrightness[i - 1] + "%");
 			}
@@ -80,6 +81,28 @@ namespace GrayscaleImageConverter
 			if (!canFireEvent) return;
 
 			parent.OnMappingChanged(color, patternDropdown.SelectedIndex + 1);
+		}
+
+		private void pictureBox1_Click(object sender, EventArgs e)
+		{
+			parent.onPatternClicked(color);
+		}
+
+		private void colorPanel_Click(object sender, EventArgs e)
+		{
+			parent.onPatternClicked(color);
+		}
+
+		internal void onSelectedPatternChanged(Color color)
+		{
+			if (this.color == color)
+			{
+				this.BackColor = Color.Salmon;
+			}
+			else
+			{
+				this.BackColor = SystemColors.Control;
+			}
 		}
 	}
 }
