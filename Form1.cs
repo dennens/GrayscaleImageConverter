@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GrayscaleImageConverter
 {
@@ -119,7 +120,6 @@ namespace GrayscaleImageConverter
 			{
 				if (dlg.FileName.EndsWith("gsi"))
 				{
-					// TODO: Update loading logic to check for new embedded pattern palette
 					byte[] data = System.IO.File.ReadAllBytes(dlg.FileName);
 					int width0 = (int)data[0];
 					int width1 = (int)data[1];
@@ -128,12 +128,28 @@ namespace GrayscaleImageConverter
 					int height0 = (int)data[2];
 					int height1 = (int)data[3];
 					int height = height0 + (height1 << 8);
+					// Skip header
+					int dataIndex = 4;
 
-					int i = 4;
+					List<int> usedPatternIndices = new List<int>() { -1, 0, 2, 4, 6, 8, 10, 12, 16, 18, 22, 24, 26, 28, 30, 32 };
 
-					List<Color> colors = new List<Color>();
-					colors.Add(Color.Transparent);
-					for (int c = 0; c < 15; ++c)
+					if ((width & (1 << 15)) > 0)
+					{
+						width ^= 1 << 15;
+
+						for (int i = 0; i < 3; ++i)
+						{
+							uint patternInt = BitConverter.ToUInt32(data, (i + 1) * 4);
+							for (int j = 0; j < 5; ++j)
+								usedPatternIndices[i * 5 + j + 1] = (int)(patternInt >> (6 * (4 - j)) & 0x3F);
+						}
+
+						// Adjust for increased header size
+						dataIndex = 16;
+					}
+
+					List<Color> colors = new List<Color>() { Color.Transparent };
+					for (int c = 0; c < PatternMapping.patternBrightness.Count; ++c)
 					{
 						int v = (int)(PatternMapping.patternBrightness[c] * 2.55f);
 						colors.Add(Color.FromArgb(v, v, v));
@@ -143,12 +159,13 @@ namespace GrayscaleImageConverter
 						for (int y = 0; y < height; ++y)
 							for (int x = 0; x < width / 2; ++x)
 							{
-								byte v = data[i];
+								byte v = data[dataIndex];
 								int vl = (v >> 4) & 0x0F;
 								int vr = v & 0x0F;
-								bmp.SetPixel(x * 2, y, colors[vr]);
-								bmp.SetPixel(x * 2 + 1, y, colors[vl]);
-								++i;
+
+								bmp.SetPixel(x * 2, y, colors[usedPatternIndices[vr] + 1]);
+								bmp.SetPixel(x * 2 + 1, y, colors[usedPatternIndices[vl] + 1]);
+								++dataIndex;
 							}
 						imageSource = new Bitmap(bmp.Bitmap);
 					}
@@ -218,7 +235,6 @@ namespace GrayscaleImageConverter
 				colors.Insert(0, Color.Transparent);
 
 			Dictionary<Color, int> mapping = input.patternMapping;
-			// TODO: Update auto-mapping with new 33 pattern selection
 			if (mapping == null)
 			{
 				mapping = new Dictionary<Color, int>
@@ -246,15 +262,17 @@ namespace GrayscaleImageConverter
 						}
 						break;
 					case MappingType.Spread:
-						float stepSize = (colors.Count - 1) / 15f;
+						float stepSize = (colors.Count - 1) / (float)GrayscaleBlitter.patterns.Length;
 						float currentStep = 1;
 						int colorIndex = 1;
-						for (int i = 1; i < 16; ++i)
+						for (int i = 1; i <= GrayscaleBlitter.patterns.Length; ++i)
 						{
 							if (currentStep >= colorIndex)
 								mapping.Add(colors[colorIndex++], i);
 							currentStep += stepSize;
 						}
+						// Ensure white is always included
+						mapping[colors[colors.Count - 1]] = GrayscaleBlitter.patterns.Length;
 						break;
 					case MappingType.Contrast:
 						int halfNumColors = (colors.Count - 1) / 2;
@@ -262,18 +280,18 @@ namespace GrayscaleImageConverter
 						for (int i = 0; i < halfNumColors; ++i)
 							mapping.Add(colors[colorIndex++], i + 1);
 
-						for (int i = 16 - (colors.Count - 1 - halfNumColors); i < 16; ++i)
+						for (int i = GrayscaleBlitter.patterns.Length + 1 - (colors.Count - 1 - halfNumColors); i <= GrayscaleBlitter.patterns.Length; ++i)
 							mapping.Add(colors[colorIndex++], i);
 						break;
 					case MappingType.Central:
-						int diff = 16 - colors.Count;
+						int diff = GrayscaleBlitter.patterns.Length - colors.Count;
 						diff /= 2;
 						for (int i = diff + 1; i < diff + colors.Count; ++i)
 							mapping.Add(colors[i - diff], i);
 						break;
 					case MappingType.Brightest:
-						int start = 16 - colors.Count;
-						for (int i = start + 1; i < 16; ++i)
+						int start = GrayscaleBlitter.patterns.Length + 1 - colors.Count;
+						for (int i = start + 1; i <= GrayscaleBlitter.patterns.Length; ++i)
 							mapping.Add(colors[i - start], i);
 						break;
 					case MappingType.Darkest:
