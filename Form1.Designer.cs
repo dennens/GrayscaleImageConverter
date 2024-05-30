@@ -48,10 +48,11 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.comboBox1 = new System.Windows.Forms.ComboBox();
 			this.playdatePalette = new System.Windows.Forms.CheckBox();
-			this.panel2 = new System.Windows.Forms.Panel();
+			this.patternMappingPanel = new System.Windows.Forms.Panel();
 			this.patternMappings = new System.Windows.Forms.Panel();
 			this.mappingTypeDropdown = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
 			this.patternMapping15 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping14 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping13 = new GrayscaleImageConverter.PatternMapping();
@@ -67,13 +68,12 @@
 			this.patternMapping3 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping2 = new GrayscaleImageConverter.PatternMapping();
 			this.patternMapping1 = new GrayscaleImageConverter.PatternMapping();
-			this.label2 = new System.Windows.Forms.Label();
 			this.menuStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
-			this.panel2.SuspendLayout();
+			this.patternMappingPanel.SuspendLayout();
 			this.patternMappings.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -290,16 +290,16 @@
 			this.playdatePalette.UseVisualStyleBackColor = true;
 			this.playdatePalette.CheckedChanged += new System.EventHandler(this.playdatePalette_CheckedChanged);
 			// 
-			// panel2
+			// patternMappingPanel
 			// 
-			this.panel2.Controls.Add(this.patternMappings);
-			this.panel2.Controls.Add(this.label2);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-			this.panel2.Location = new System.Drawing.Point(724, 24);
-			this.panel2.MinimumSize = new System.Drawing.Size(260, 0);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(260, 628);
-			this.panel2.TabIndex = 5;
+			this.patternMappingPanel.Controls.Add(this.patternMappings);
+			this.patternMappingPanel.Controls.Add(this.label2);
+			this.patternMappingPanel.Dock = System.Windows.Forms.DockStyle.Right;
+			this.patternMappingPanel.Location = new System.Drawing.Point(724, 24);
+			this.patternMappingPanel.MinimumSize = new System.Drawing.Size(260, 0);
+			this.patternMappingPanel.Name = "patternMappingPanel";
+			this.patternMappingPanel.Size = new System.Drawing.Size(260, 628);
+			this.patternMappingPanel.TabIndex = 5;
 			// 
 			// patternMappings
 			// 
@@ -345,111 +345,6 @@
 			this.label4.TabIndex = 15;
 			this.label4.Text = "Mapping:";
 			// 
-			// patternMapping15
-			// 
-			this.patternMapping15.Location = new System.Drawing.Point(0, 574);
-			this.patternMapping15.Name = "patternMapping15";
-			this.patternMapping15.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping15.TabIndex = 14;
-			// 
-			// patternMapping14
-			// 
-			this.patternMapping14.Location = new System.Drawing.Point(0, 535);
-			this.patternMapping14.Name = "patternMapping14";
-			this.patternMapping14.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping14.TabIndex = 13;
-			// 
-			// patternMapping13
-			// 
-			this.patternMapping13.Location = new System.Drawing.Point(0, 496);
-			this.patternMapping13.Name = "patternMapping13";
-			this.patternMapping13.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping13.TabIndex = 12;
-			// 
-			// patternMapping12
-			// 
-			this.patternMapping12.Location = new System.Drawing.Point(0, 457);
-			this.patternMapping12.Name = "patternMapping12";
-			this.patternMapping12.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping12.TabIndex = 11;
-			// 
-			// patternMapping11
-			// 
-			this.patternMapping11.Location = new System.Drawing.Point(0, 418);
-			this.patternMapping11.Name = "patternMapping11";
-			this.patternMapping11.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping11.TabIndex = 10;
-			// 
-			// patternMapping10
-			// 
-			this.patternMapping10.Location = new System.Drawing.Point(0, 379);
-			this.patternMapping10.Name = "patternMapping10";
-			this.patternMapping10.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping10.TabIndex = 9;
-			// 
-			// patternMapping9
-			// 
-			this.patternMapping9.Location = new System.Drawing.Point(0, 340);
-			this.patternMapping9.Name = "patternMapping9";
-			this.patternMapping9.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping9.TabIndex = 8;
-			// 
-			// patternMapping8
-			// 
-			this.patternMapping8.Location = new System.Drawing.Point(0, 301);
-			this.patternMapping8.Name = "patternMapping8";
-			this.patternMapping8.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping8.TabIndex = 7;
-			// 
-			// patternMapping7
-			// 
-			this.patternMapping7.Location = new System.Drawing.Point(0, 262);
-			this.patternMapping7.Name = "patternMapping7";
-			this.patternMapping7.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping7.TabIndex = 6;
-			// 
-			// patternMapping6
-			// 
-			this.patternMapping6.Location = new System.Drawing.Point(0, 223);
-			this.patternMapping6.Name = "patternMapping6";
-			this.patternMapping6.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping6.TabIndex = 5;
-			// 
-			// patternMapping5
-			// 
-			this.patternMapping5.Location = new System.Drawing.Point(0, 184);
-			this.patternMapping5.Name = "patternMapping5";
-			this.patternMapping5.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping5.TabIndex = 4;
-			// 
-			// patternMapping4
-			// 
-			this.patternMapping4.Location = new System.Drawing.Point(0, 145);
-			this.patternMapping4.Name = "patternMapping4";
-			this.patternMapping4.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping4.TabIndex = 3;
-			// 
-			// patternMapping3
-			// 
-			this.patternMapping3.Location = new System.Drawing.Point(0, 106);
-			this.patternMapping3.Name = "patternMapping3";
-			this.patternMapping3.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping3.TabIndex = 2;
-			// 
-			// patternMapping2
-			// 
-			this.patternMapping2.Location = new System.Drawing.Point(0, 68);
-			this.patternMapping2.Name = "patternMapping2";
-			this.patternMapping2.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping2.TabIndex = 1;
-			// 
-			// patternMapping1
-			// 
-			this.patternMapping1.Location = new System.Drawing.Point(0, 28);
-			this.patternMapping1.Name = "patternMapping1";
-			this.patternMapping1.Size = new System.Drawing.Size(362, 39);
-			this.patternMapping1.TabIndex = 0;
-			// 
 			// label2
 			// 
 			this.label2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -460,12 +355,117 @@
 			this.label2.Text = "Pattern mapping";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// patternMapping15
+			// 
+			this.patternMapping15.Location = new System.Drawing.Point(52, 577);
+			this.patternMapping15.Name = "patternMapping15";
+			this.patternMapping15.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping15.TabIndex = 14;
+			// 
+			// patternMapping14
+			// 
+			this.patternMapping14.Location = new System.Drawing.Point(52, 538);
+			this.patternMapping14.Name = "patternMapping14";
+			this.patternMapping14.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping14.TabIndex = 13;
+			// 
+			// patternMapping13
+			// 
+			this.patternMapping13.Location = new System.Drawing.Point(52, 499);
+			this.patternMapping13.Name = "patternMapping13";
+			this.patternMapping13.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping13.TabIndex = 12;
+			// 
+			// patternMapping12
+			// 
+			this.patternMapping12.Location = new System.Drawing.Point(52, 460);
+			this.patternMapping12.Name = "patternMapping12";
+			this.patternMapping12.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping12.TabIndex = 11;
+			// 
+			// patternMapping11
+			// 
+			this.patternMapping11.Location = new System.Drawing.Point(52, 421);
+			this.patternMapping11.Name = "patternMapping11";
+			this.patternMapping11.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping11.TabIndex = 10;
+			// 
+			// patternMapping10
+			// 
+			this.patternMapping10.Location = new System.Drawing.Point(52, 382);
+			this.patternMapping10.Name = "patternMapping10";
+			this.patternMapping10.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping10.TabIndex = 9;
+			// 
+			// patternMapping9
+			// 
+			this.patternMapping9.Location = new System.Drawing.Point(52, 343);
+			this.patternMapping9.Name = "patternMapping9";
+			this.patternMapping9.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping9.TabIndex = 8;
+			// 
+			// patternMapping8
+			// 
+			this.patternMapping8.Location = new System.Drawing.Point(52, 304);
+			this.patternMapping8.Name = "patternMapping8";
+			this.patternMapping8.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping8.TabIndex = 7;
+			// 
+			// patternMapping7
+			// 
+			this.patternMapping7.Location = new System.Drawing.Point(52, 265);
+			this.patternMapping7.Name = "patternMapping7";
+			this.patternMapping7.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping7.TabIndex = 6;
+			// 
+			// patternMapping6
+			// 
+			this.patternMapping6.Location = new System.Drawing.Point(52, 226);
+			this.patternMapping6.Name = "patternMapping6";
+			this.patternMapping6.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping6.TabIndex = 5;
+			// 
+			// patternMapping5
+			// 
+			this.patternMapping5.Location = new System.Drawing.Point(52, 187);
+			this.patternMapping5.Name = "patternMapping5";
+			this.patternMapping5.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping5.TabIndex = 4;
+			// 
+			// patternMapping4
+			// 
+			this.patternMapping4.Location = new System.Drawing.Point(52, 148);
+			this.patternMapping4.Name = "patternMapping4";
+			this.patternMapping4.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping4.TabIndex = 3;
+			// 
+			// patternMapping3
+			// 
+			this.patternMapping3.Location = new System.Drawing.Point(52, 109);
+			this.patternMapping3.Name = "patternMapping3";
+			this.patternMapping3.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping3.TabIndex = 2;
+			// 
+			// patternMapping2
+			// 
+			this.patternMapping2.Location = new System.Drawing.Point(52, 71);
+			this.patternMapping2.Name = "patternMapping2";
+			this.patternMapping2.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping2.TabIndex = 1;
+			// 
+			// patternMapping1
+			// 
+			this.patternMapping1.Location = new System.Drawing.Point(52, 31);
+			this.patternMapping1.Name = "patternMapping1";
+			this.patternMapping1.Size = new System.Drawing.Size(205, 34);
+			this.patternMapping1.TabIndex = 0;
+			// 
 			// Form1
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(984, 681);
-			this.Controls.Add(this.panel2);
+			this.Controls.Add(this.patternMappingPanel);
 			this.Controls.Add(this.panel1);
 			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.menuStrip1);
@@ -479,7 +479,7 @@
 			this.panel1.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
-			this.panel2.ResumeLayout(false);
+			this.patternMappingPanel.ResumeLayout(false);
 			this.patternMappings.ResumeLayout(false);
 			this.patternMappings.PerformLayout();
 			this.ResumeLayout(false);
@@ -505,7 +505,7 @@
 		private System.Windows.Forms.CheckBox playdatePalette;
 		private System.Windows.Forms.ComboBox comboBox1;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Panel panel2;
+		private System.Windows.Forms.Panel patternMappingPanel;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Panel patternMappings;
 		private PatternMapping patternMapping15;

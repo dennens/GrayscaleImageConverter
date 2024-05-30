@@ -71,7 +71,6 @@ namespace GrayscaleImageConverter
 
 			colorPanel.BackColor = color;
 			patternDropdown.SelectedIndex = currentMapping - 1;
-			pictureBox1.Image = palette[currentMapping - 1];
 
 			canFireEvent = true;
 		}
@@ -103,6 +102,16 @@ namespace GrayscaleImageConverter
 			{
 				this.BackColor = SystemColors.Control;
 			}
+		}
+
+		private void patternDropdown_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			int index = e.Index >= 0 ? e.Index : 0;
+			e.DrawBackground();
+			Rectangle r = e.Bounds;
+			Rectangle bounds = new Rectangle(r.X + 1, r.Y + 1, r.Width - 2, r.Height - 2);
+			e.Graphics.DrawImage(palette[index], bounds, new Rectangle(0, 0, bounds.Width, bounds.Height), GraphicsUnit.Pixel);
+			e.DrawFocusRectangle();
 		}
 	}
 }
