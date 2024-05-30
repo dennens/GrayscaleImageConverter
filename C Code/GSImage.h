@@ -206,8 +206,7 @@ static void drawGSImage(PlaydateAPI* pd, GSImage* image, int drawX, int drawY)
 			int sx = x + drawX;
 
 			// Get bit from pattern
-#define _PATTERN ((uint8_t*)&usedPatterns[imageValue - 1])
-#define _PATTERNROW _PATTERN[screenY & 7]
+#define _PATTERNROW usedPatterns[imageValue - 1][screenY & 7]
 
 			// Check if we can blit a full 32bit int rather than individual pixels
 			if (blitBitIndex == 0 && x + 32 < width)
@@ -239,7 +238,7 @@ static void drawGSImage(PlaydateAPI* pd, GSImage* image, int drawX, int drawY)
 					blitMask = 0;
 					blitValue = 0;
 					x += 31;	// final ++ is done in loop
-					if (sx > 400)
+					if (x + drawX > 400)
 						break;
 					continue;
 				}
