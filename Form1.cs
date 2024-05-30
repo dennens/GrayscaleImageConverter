@@ -497,6 +497,26 @@ namespace GrayscaleImageConverter
 			{
 				imageX = imageXOnDrag + (e.X - mouseX) / scale;
 				imageY = imageYOnDrag + (e.Y - mouseY) / scale;
+
+				if ((ModifierKeys & Keys.Shift) > 0)
+				{
+					// straight dragging only - detect most likely drag direction
+					int dx = Math.Abs(imageX - imageXOnDrag);
+					int dy = Math.Abs(imageY - imageYOnDrag);
+					int minDragDistance = 25;
+					if (dx > dy && dx > minDragDistance)
+						imageY = imageYOnDrag;
+					else if (dy > dx && dy > minDragDistance)
+						imageX = imageXOnDrag;
+					else
+					{
+						// Distance too short for accurate reading - guess based on image aspect ratio
+						if (imageWidth / 400.0f > imageHeight / 240.0f)
+							imageY = imageYOnDrag;
+						else
+							imageX = imageXOnDrag;
+					}
+				}
 				numericUpDownX.Value = imageX;
 				numericUpDownY.Value = imageY;
 
