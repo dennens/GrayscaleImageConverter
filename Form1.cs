@@ -119,6 +119,7 @@ namespace GrayscaleImageConverter
 			{
 				if (dlg.FileName.EndsWith("gsi"))
 				{
+					// TODO: Update loading logic to check for new embedded pattern palette
 					byte[] data = System.IO.File.ReadAllBytes(dlg.FileName);
 					int width0 = (int)data[0];
 					int width1 = (int)data[1];
@@ -217,6 +218,7 @@ namespace GrayscaleImageConverter
 				colors.Insert(0, Color.Transparent);
 
 			Dictionary<Color, int> mapping = input.patternMapping;
+			// TODO: Update auto-mapping with new 33 pattern selection
 			if (mapping == null)
 			{
 				mapping = new Dictionary<Color, int>
@@ -496,6 +498,14 @@ namespace GrayscaleImageConverter
 		private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
 		{
 			mouseDragging = false;
+		}
+
+		private void pictureBox1_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			int imageMouseX = (e.X / scale) - imageX;
+			int imageMouseY = (e.Y / scale) - imageY;
+			Color c = directImageSource.GetPixel(imageMouseX, imageMouseY);
+			onPatternClicked(c);
 		}
 
 		private void SetScale(int scale)
