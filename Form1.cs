@@ -246,7 +246,8 @@ namespace GrayscaleImageConverter
 					case MappingType.Match:
 						for (int i = 1; i < colors.Count; ++i)
 						{
-							float color = colors[i].R / 2.55f;
+							float color = colors[i].R / 255f;
+							color *= 100;
 							int closest = 1;
 							float closestError = 100;
 							for (int p = 0; p < PatternMapping.patternBrightness.Count; ++p)
