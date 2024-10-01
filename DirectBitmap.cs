@@ -34,6 +34,9 @@ namespace GrayscaleImageConverter
 
 		public Color GetPixel(int x, int y)
 		{
+			if (x < 0 || x >= Width || y < 0 || y >= Height)
+				return Color.Transparent;
+
 			int index = x + (y * Width);
 			int col = Bits[index];
 			Color result = Color.FromArgb(col);
